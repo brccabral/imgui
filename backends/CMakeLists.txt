@@ -39,6 +39,12 @@ else ()
     message(WARNING "emscripten not found")
 endif ()
 
+if (ANDROID_NDK)
+    message(STATUS "ANDROID_NDK provided ${ANDROID_NDK}.")
+else ()
+    message(WARNING "ANDROID_NDK not provided. `cmake -DCMAKE_TOOLCHAIN_FILE=android-ndk/build/cmake/android.toolchain.cmake ...`")
+endif ()
+
 set(FOUND_BACKENDS "")
 if (glfw3_FOUND AND OpenGL_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_opengl2" "glfw_opengl3")
@@ -69,6 +75,9 @@ if (EMSCRIPTEN AND glfw3_FOUND)
 endif ()
 if (EMSCRIPTEN AND glfw3_FOUND AND OpenGL_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_web_opengl3")
+endif ()
+if (ANDROID_NDK)
+    list(APPEND FOUND_BACKENDS "android_opengl3")
 endif ()
 
 set(SUPPORTED_BACKENDS ${FOUND_BACKENDS})
@@ -175,6 +184,42 @@ if ("sdl2_vulkan" IN_LIST SUPPORTED_BACKENDS)
     set(TARGET_LIBS SDL2::SDL2 Vulkan::Vulkan)
 
     add_backend("sdl2_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
+if ("android_opengl3" IN_LIST SUPPORTED_BACKENDS)
+    set(HEADER_FILES imgui_impl_android.h imgui_impl_opengl3.h)
+    set(CPP_FILES imgui_impl_android.cpp imgui_impl_opengl3.cpp)
+    set(TARGET_LIBS android EGL GLESv3 log)
+
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
+
+    add_library(imgui_backend_android_opengl3 SHARED)
+    add_library(imgui::backend_android_opengl3 ALIAS imgui_backend_android_opengl3)
+
+    target_compile_features(imgui_backend_android_opengl3 PRIVATE cxx_std_11)
+
+    # ImGui sources
+    target_sources(imgui_backend_android_opengl3
+    PUBLIC
+            FILE_SET HEADERS FILES ${HEADER_FILES}
+    PRIVATE ${CPP_FILES}
+    )
+
+    target_compile_definitions(imgui_backend_android_opengl3 PUBLIC IMGUI_IMPL_OPENGL_ES3)
+
+    target_include_directories(imgui_backend_android_opengl3 PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+    )
+
+    target_link_libraries(imgui_backend_android_opengl3 PUBLIC imgui::imgui)
+    target_link_libraries(imgui_backend_android_opengl3 PUBLIC ${TARGET_LIBS})
+
+    install(TARGETS imgui_backend_android_opengl3
+            EXPORT imguiTargets
+            ARCHIVE DESTINATION lib
+            FILE_SET HEADERS DESTINATION include
+    )
 endif ()
 
 install(EXPORT imguiTargets
