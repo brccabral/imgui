@@ -166,6 +166,17 @@ if ("sdl2_sdlrenderer2" IN_LIST SUPPORTED_BACKENDS)
     add_backend("sdl2_sdlrenderer2" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
+if ("sdl2_vulkan" IN_LIST SUPPORTED_BACKENDS)
+    find_package(SDL2 REQUIRED)
+    find_package(Vulkan REQUIRED)
+
+    set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_vulkan.h)
+    set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_vulkan.cpp)
+    set(TARGET_LIBS SDL2::SDL2 Vulkan::Vulkan)
+
+    add_backend("sdl2_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
 install(EXPORT imguiTargets
         NAMESPACE imgui::
         DESTINATION share/cmake/imgui
