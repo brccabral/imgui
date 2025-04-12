@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(example_glfw_opengl2)
+project(example_glfw_opengl3)
 
 # find_package(imgui REQUIRED)
 
@@ -7,4 +7,4 @@ add_executable(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME} PRIVATE main.cpp)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui imgui::backend_glfw_opengl2)
+target_link_libraries(${PROJECT_NAME} PRIVATE imgui::imgui imgui::backend_glfw_opengl3)

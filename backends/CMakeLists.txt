@@ -39,74 +39,97 @@ else ()
     message(WARNING "emscripten not found")
 endif ()
 
-set(SUPPORTED_BACKENDS "")
+set(FOUND_BACKENDS "")
 if (glfw3_FOUND AND OpenGL_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "glfw_opengl2" "glfw_opengl3")
+    list(APPEND FOUND_BACKENDS "glfw_opengl2" "glfw_opengl3")
 endif ()
 if (glfw3_FOUND AND Vulkan_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "glfw_vulkan")
+    list(APPEND FOUND_BACKENDS "glfw_vulkan")
 endif ()
 if (SDL2_FOUND AND OpenGL_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "sdl2_opengl2" "sdl2_opengl3" "sdl2_sdlrenderer2")
+    list(APPEND FOUND_BACKENDS "sdl2_opengl2" "sdl2_opengl3" "sdl2_sdlrenderer2")
 endif ()
 if (SDL2_FOUND AND Vulkan_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "sdl2_vulkan")
+    list(APPEND FOUND_BACKENDS "sdl2_vulkan")
 endif ()
 if (SDL3_FOUND AND OpenGL_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "sdl3_opengl3")
+    list(APPEND FOUND_BACKENDS "sdl3_opengl3")
 endif ()
 if (SDL3_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "sdl3_sdlgpu3" "sdl3_sdlrenderer3")
+    list(APPEND FOUND_BACKENDS "sdl3_sdlgpu3" "sdl3_sdlrenderer3")
 endif ()
 if (SDL3_FOUND AND Vulkan_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "sdl3_vulkan")
+    list(APPEND FOUND_BACKENDS "sdl3_vulkan")
 endif ()
 if (EMSCRIPTEN AND glfw3_FOUND)
-    list(APPEND SUPPORTED_BACKENDS "glfw_wgpu")
+    list(APPEND FOUND_BACKENDS "glfw_wgpu")
+endif ()
+if (EMSCRIPTEN AND glfw3_FOUND AND OpenGL_FOUND)
+    list(APPEND FOUND_BACKENDS "glfw_web_opengl3")
 endif ()
 
-list(GET SUPPORTED_BACKENDS 0 FIRST_BACKEND)
-
-set(BACKEND ${FIRST_BACKEND} CACHE STRING "Choose one of: ${SUPPORTED_BACKENDS}")
-set_property(CACHE BACKEND PROPERTY STRINGS ${SUPPORTED_BACKENDS})
-if (NOT BACKEND IN_LIST SUPPORTED_BACKENDS)
-    message(FATAL_ERROR "Invalid backend ${BACKEND}. Supported values ${SUPPORTED_BACKENDS}")
-endif ()
+set(SUPPORTED_BACKENDS ${FOUND_BACKENDS})
+set(SUPPORTED_BACKENDS ${FOUND_BACKENDS} PARENT_SCOPE)
 message(STATUS "Supported backends ${SUPPORTED_BACKENDS}")
-message(STATUS "Backend ${BACKEND}")
 
-if (BACKEND STREQUAL "glfw_opengl2")
+function (add_backend NAME HEADER_FILES CPP_FILES TARGET_LIBS)
+    add_library(imgui_backend_${NAME} STATIC)
+    add_library(imgui::backend_${NAME} ALIAS imgui_backend_${NAME})
+
+    target_sources(imgui_backend_${NAME}
+    PUBLIC FILE_SET HEADERS FILES ${HEADER_FILES}
+    PRIVATE ${CPP_FILES}
+    )
+    target_compile_features(imgui_backend_${NAME} PRIVATE cxx_std_11)
+    target_compile_options(imgui_backend_${NAME} PRIVATE -Wall -Wformat)
+
+    target_include_directories(imgui_backend_${NAME} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+    )
+
+    target_link_libraries(imgui_backend_${NAME} PUBLIC imgui::imgui)
+    target_link_libraries(imgui_backend_${NAME} PUBLIC ${TARGET_LIBS})
+
+    install(TARGETS imgui_backend_${NAME}
+            EXPORT imguiTargets
+            ARCHIVE DESTINATION lib
+            FILE_SET HEADERS DESTINATION include
+    )
+endfunction ()
+
+if ("glfw_opengl2" IN_LIST SUPPORTED_BACKENDS)
     find_package(glfw3 REQUIRED)
     find_package(OpenGL REQUIRED)
 
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_opengl2.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_opengl2.cpp)
     set(TARGET_LIBS glfw OpenGL)
+
+    add_backend("glfw_opengl2" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
-add_library(imgui STATIC)
-add_library(imgui::imgui ALIAS imgui)
+if ("glfw_opengl3" IN_LIST SUPPORTED_BACKENDS)
+    find_package(glfw3 REQUIRED)
+    find_package(OpenGL REQUIRED)
 
-target_sources(imgui
-PUBLIC FILE_SET HEADERS FILES ${HEADER_FILES}
-PRIVATE ${CPP_FILES}
-)
-target_compile_features(imgui PRIVATE cxx_std_11)
-target_compile_options(imgui PRIVATE -Wall -Wformat)
+    set(HEADER_FILES imgui_impl_glfw.h imgui_impl_opengl3.h)
+    set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_opengl3.cpp)
+    set(TARGET_LIBS glfw OpenGL)
 
-target_include_directories(imgui PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include>
-)
+    add_backend("glfw_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
 
-target_link_libraries(imgui PUBLIC imgui::main)
-target_link_libraries(imgui PUBLIC ${TARGET_LIBS})
+if ("glfw_vulkan" IN_LIST SUPPORTED_BACKENDS)
+    find_package(glfw3 REQUIRED)
+    find_package(Vulkan REQUIRED)
 
-install(TARGETS imgui
-        EXPORT imguiTargets
-        ARCHIVE DESTINATION lib
-        FILE_SET HEADERS DESTINATION include
-)
+    set(HEADER_FILES imgui_impl_glfw.h imgui_impl_vulkan.h)
+    set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_vulkan.cpp)
+    set(TARGET_LIBS glfw Vulkan::Vulkan)
+
+    add_backend("glfw_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
 
 install(EXPORT imguiTargets
         NAMESPACE imgui::

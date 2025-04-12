@@ -3,10 +3,10 @@ project(ImGui)
 
 option(BUILD_EXAMPLES "Build examples" ON)
 
-add_library(imguimain STATIC)
-add_library(imgui::main ALIAS imguimain)
+add_library(imgui STATIC)
+add_library(imgui::imgui ALIAS imgui)
 
-target_sources(imguimain
+target_sources(imgui
 PUBLIC
     FILE_SET HEADERS
     FILES
@@ -23,15 +23,15 @@ PRIVATE
         imgui_tables.cpp
         imgui_widgets.cpp
 )
-target_compile_features(imguimain PRIVATE cxx_std_11)
-target_compile_options(imguimain PRIVATE -Wall -Wformat)
+target_compile_features(imgui PRIVATE cxx_std_11)
+target_compile_options(imgui PRIVATE -Wall -Wformat)
 
-target_include_directories(imguimain PUBLIC
+target_include_directories(imgui PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
 )
 
-install(TARGETS imguimain
+install(TARGETS imgui
         EXPORT imguiTargets
         ARCHIVE DESTINATION lib
         FILE_SET HEADERS DESTINATION include
