@@ -33,6 +33,13 @@ else ()
     message(WARNING "Vulkan not found")
 endif ()
 
+find_package(Allegro QUIET)
+if (Allegro_FOUND)
+    message(STATUS "Found Allegro")
+else ()
+    message(WARNING "Allegro not found")
+endif ()
+
 if (EMSCRIPTEN)
     message(STATUS "Found emscripten")
 else ()
@@ -69,6 +76,9 @@ if (SDL3_FOUND)
 endif ()
 if (SDL3_FOUND AND Vulkan_FOUND)
     list(APPEND FOUND_BACKENDS "sdl3_vulkan")
+endif ()
+if (Allegro_FOUND)
+    list(APPEND FOUND_BACKENDS "allegro5")
 endif ()
 if (EMSCRIPTEN AND glfw3_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_wgpu")
@@ -184,6 +194,11 @@ if ("sdl2_vulkan" IN_LIST SUPPORTED_BACKENDS)
     set(TARGET_LIBS SDL2::SDL2 Vulkan::Vulkan)
 
     add_backend("sdl2_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
+if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
+#    Allegro needs a config.h file, which is not compiled in imgui::imgui
+#    We add a new library in the `example_allegro5`
 endif ()
 
 if ("android_opengl3" IN_LIST SUPPORTED_BACKENDS)
