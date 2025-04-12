@@ -131,6 +131,17 @@ if ("glfw_vulkan" IN_LIST SUPPORTED_BACKENDS)
     add_backend("glfw_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
+if ("sdl2_opengl2" IN_LIST SUPPORTED_BACKENDS)
+    find_package(SDL2 REQUIRED)
+    find_package(OpenGL REQUIRED)
+
+    set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_opengl2.h)
+    set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_opengl2.cpp)
+    set(TARGET_LIBS SDL2::SDL2 OpenGL)
+
+    add_backend("sdl2_opengl2" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
 install(EXPORT imguiTargets
         NAMESPACE imgui::
         DESTINATION share/cmake/imgui
