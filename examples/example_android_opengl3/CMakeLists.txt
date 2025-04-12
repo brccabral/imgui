@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.23)
 project(example_android_opengl3)
 
 # find_package(imgui REQUIRED)
