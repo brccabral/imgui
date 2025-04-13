@@ -63,6 +63,13 @@ endif ()
 
 if (IMGUI_DAWN_DIR)
     if (EXISTS ${IMGUI_DAWN_DIR}/CMakeLists.txt)
+        find_package(VulkanUtilityLibraries QUIET)
+        if (VulkanUtilityLibraries_FOUND)
+            message(STATUS "Found VulkanUtilityLibraries_FOUND")
+        else ()
+            message(FATAL_ERROR "VulkanUtilityLibraries is a dependency of Dawn. The version fetched by Dawn is not compatible. `sudo apt install vulkan-utility-libraries-dev`")
+        endif ()
+
         # Dawn wgpu desktop
         set(DAWN_FETCH_DEPENDENCIES ON)
 
