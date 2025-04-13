@@ -28,3 +28,8 @@ endif ()
 if ("android_opengl3" IN_LIST SUPPORTED_BACKENDS)
     add_subdirectory(example_android_opengl3)
 endif ()
+if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS
+    OR "glfw_wgpu_dawn" IN_LIST SUPPORTED_BACKENDS
+)
+    add_subdirectory(example_glfw_wgpu)
+endif ()
