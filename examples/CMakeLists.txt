@@ -22,7 +22,9 @@ endif ()
 if ("sdl2_vulkan" IN_LIST SUPPORTED_BACKENDS)
     add_subdirectory(example_sdl2_vulkan)
 endif ()
-if ("sdl3_opengl3" IN_LIST SUPPORTED_BACKENDS)
+if ("sdl3_opengl3" IN_LIST SUPPORTED_BACKENDS
+    OR "sdl3_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS
+)
     add_subdirectory(example_sdl3_opengl3)
 endif ()
 if ("sdl3_sdlgpu3" IN_LIST SUPPORTED_BACKENDS)
