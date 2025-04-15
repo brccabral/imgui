@@ -21,7 +21,7 @@ endif ()
 
 find_package(SDL3 QUIET)
 if (SDL3_FOUND)
-    message(STATUS "Found SDL3")
+    message(STATUS "Found SDL3 ${SDL3_VERSION}")
 else ()
     message(WARNING "SDL3 not found")
 endif ()
@@ -258,6 +258,16 @@ if ("sdl2_vulkan" IN_LIST SUPPORTED_BACKENDS)
     set(TARGET_LIBS SDL2::SDL2 Vulkan::Vulkan)
 
     add_backend("sdl2_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
+if ("sdl3_sdlrenderer3" IN_LIST SUPPORTED_BACKENDS)
+    find_package(SDL3 REQUIRED)
+
+    set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_sdlrenderer3.h)
+    set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_sdlrenderer3.cpp)
+    set(TARGET_LIBS SDL3::SDL3)
+
+    add_backend("sdl3_sdlrenderer3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
 if ("glut_opengl2" IN_LIST SUPPORTED_BACKENDS)
