@@ -38,4 +38,15 @@ if (EMSCRIPTEN)
     add_custom_command(TARGET example_glfw_wgpu_emscripten POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_LIST_DIR}/web/index.html" $<TARGET_FILE_DIR:example_glfw_wgpu_emscripten>
     )
+
+    if (IMGUI_HTTP_PORT)
+        set(HTTP_PORT ${IMGUI_HTTP_PORT})
+    else ()
+        set(HTTP_PORT 8080)
+    endif ()
+    add_custom_target(run_example_glfw_wgpu_emscripten
+        COMMAND python3 -m http.server -d $<TARGET_FILE_DIR:example_glfw_wgpu_emscripten> ${HTTP_PORT}
+        DEPENDS example_glfw_wgpu_emscripten
+        COMMAND "Run a python3 http.server in example_glfw_wgpu_emscripten location http://127.0.0.1:${HTTP_PORT}/"
+    )
 endif ()
