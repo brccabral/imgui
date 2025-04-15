@@ -142,7 +142,7 @@ if (GLUT_FOUND AND OpenGL_FOUND)
     list(APPEND FOUND_BACKENDS "glut_opengl2")
 endif ()
 if (IMGUI_EMSCRIPTEN_FOUND)
-    list(APPEND FOUND_BACKENDS "glfw_wgpu_emscripten" "glfw_opengl3_emscripten" "sdl3_opengl3_emscripten")
+    list(APPEND FOUND_BACKENDS "glfw_wgpu_emscripten" "glfw_opengl3_emscripten" "sdl2_opengl3_emscripten" "sdl3_opengl3_emscripten")
 endif ()
 if (IMGUI_DAWN_FOUND AND glfw3_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_wgpu_dawn")
@@ -192,6 +192,7 @@ function (add_emscripten_flags TARGET USE_RENDER_FLAG USE_FILESYSTEM)
         -Os
     )
 
+    target_compile_options(${TARGET} PUBLIC ${USE_RENDER_FLAG})
     target_link_options(${TARGET} PUBLIC ${USE_RENDER_FLAG})
 
     target_link_options(${TARGET}
@@ -391,11 +392,21 @@ if ("glfw_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
     add_emscripten_flags(imgui_backend_glfw_opengl3_emscripten "${USE_RENDER_FLAG}" 0)
 endif ()
 
+if ("sdl2_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
+
+    set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_opengl3.h)
+    set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_opengl3.cpp)
+
+    set(USE_RENDER_FLAG "-sUSE_SDL=2")
+
+    add_backend("sdl2_opengl3_emscripten" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+    add_emscripten_flags(imgui_backend_sdl2_opengl3_emscripten "${USE_RENDER_FLAG}" 1)
+endif ()
+
 if ("sdl3_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_opengl3.cpp)
-    set(TARGET_LIBS glfw)
 
     set(USE_RENDER_FLAG "-sUSE_SDL=3")
 

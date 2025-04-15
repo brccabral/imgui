@@ -13,7 +13,9 @@ endif ()
 if ("sdl2_opengl2" IN_LIST SUPPORTED_BACKENDS)
     add_subdirectory(example_sdl2_opengl2)
 endif ()
-if ("sdl2_opengl3" IN_LIST SUPPORTED_BACKENDS)
+if ("sdl2_opengl3" IN_LIST SUPPORTED_BACKENDS
+    OR "sdl2_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS
+)
     add_subdirectory(example_sdl2_opengl3)
 endif ()
 if ("sdl2_sdlrenderer2" IN_LIST SUPPORTED_BACKENDS)
