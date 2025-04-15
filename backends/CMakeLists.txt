@@ -270,6 +270,17 @@ if ("sdl3_sdlrenderer3" IN_LIST SUPPORTED_BACKENDS)
     add_backend("sdl3_sdlrenderer3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
+if ("sdl3_opengl3" IN_LIST SUPPORTED_BACKENDS)
+    find_package(SDL3 REQUIRED)
+    find_package(OpenGL REQUIRED)
+
+    set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_opengl3.h)
+    set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_opengl3.cpp)
+    set(TARGET_LIBS SDL3::SDL3 OpenGL)
+
+    add_backend("sdl3_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
 if ("glut_opengl2" IN_LIST SUPPORTED_BACKENDS)
     find_package(GLUT REQUIRED)
     find_package(OpenGL REQUIRED)
