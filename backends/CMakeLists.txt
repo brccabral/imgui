@@ -333,10 +333,10 @@ if ("android_opengl3" IN_LIST SUPPORTED_BACKENDS)
     set(CPP_FILES imgui_impl_android.cpp imgui_impl_opengl3.cpp)
     set(TARGET_LIBS android EGL GLESv3 log)
 
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
-
     add_library(imgui_backend_android_opengl3 SHARED)
     add_library(imgui::backend_android_opengl3 ALIAS imgui_backend_android_opengl3)
+
+    target_link_options(imgui_backend_android_opengl3 PUBLIC "-uANativeActivity_onCreate")
 
     target_compile_features(imgui_backend_android_opengl3 PRIVATE cxx_std_11)
 
