@@ -260,16 +260,6 @@ if ("sdl2_vulkan" IN_LIST SUPPORTED_BACKENDS)
     add_backend("sdl2_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
-if ("sdl3_sdlrenderer3" IN_LIST SUPPORTED_BACKENDS)
-    find_package(SDL3 REQUIRED)
-
-    set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_sdlrenderer3.h)
-    set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_sdlrenderer3.cpp)
-    set(TARGET_LIBS SDL3::SDL3)
-
-    add_backend("sdl3_sdlrenderer3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
-endif ()
-
 if ("sdl3_opengl3" IN_LIST SUPPORTED_BACKENDS)
     find_package(SDL3 REQUIRED)
     find_package(OpenGL REQUIRED)
@@ -281,6 +271,16 @@ if ("sdl3_opengl3" IN_LIST SUPPORTED_BACKENDS)
     add_backend("sdl3_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
+if ("sdl3_sdlrenderer3" IN_LIST SUPPORTED_BACKENDS)
+    find_package(SDL3 REQUIRED)
+
+    set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_sdlrenderer3.h)
+    set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_sdlrenderer3.cpp)
+    set(TARGET_LIBS SDL3::SDL3)
+
+    add_backend("sdl3_sdlrenderer3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
 if ("sdl3_sdlgpu3" IN_LIST SUPPORTED_BACKENDS)
     find_package(SDL3 REQUIRED)
 
@@ -289,6 +289,17 @@ if ("sdl3_sdlgpu3" IN_LIST SUPPORTED_BACKENDS)
     set(TARGET_LIBS SDL3::SDL3)
 
     add_backend("sdl3_sdlgpu3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
+
+if ("sdl3_vulkan" IN_LIST SUPPORTED_BACKENDS)
+    find_package(SDL3 REQUIRED)
+    find_package(Vulkan REQUIRED)
+
+    set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_vulkan.h)
+    set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_vulkan.cpp)
+    set(TARGET_LIBS SDL3::SDL3 Vulkan::Vulkan)
+
+    add_backend("sdl3_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
 
 if ("glut_opengl2" IN_LIST SUPPORTED_BACKENDS)
