@@ -2,7 +2,9 @@ add_subdirectory(example_null)
 if ("glfw_opengl2" IN_LIST SUPPORTED_BACKENDS)
     add_subdirectory(example_glfw_opengl2)
 endif ()
-if ("glfw_opengl3" IN_LIST SUPPORTED_BACKENDS)
+if ("glfw_opengl3" IN_LIST SUPPORTED_BACKENDS
+    OR "glfw_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS
+)
     add_subdirectory(example_glfw_opengl3)
 endif ()
 if ("glfw_vulkan" IN_LIST SUPPORTED_BACKENDS)

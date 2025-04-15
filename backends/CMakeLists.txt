@@ -114,9 +114,6 @@ set(FOUND_BACKENDS "")
 if (glfw3_FOUND AND OpenGL_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_opengl2" "glfw_opengl3")
 endif ()
-if (glfw3_FOUND AND OpenGL_FOUND AND IMGUI_EMSCRIPTEN_FOUND)
-    list(APPEND FOUND_BACKENDS "")
-endif ()
 if (glfw3_FOUND AND Vulkan_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_vulkan")
 endif ()
@@ -145,7 +142,7 @@ if (GLUT_FOUND AND OpenGL_FOUND)
     list(APPEND FOUND_BACKENDS "glut_opengl2")
 endif ()
 if (IMGUI_EMSCRIPTEN_FOUND)
-    list(APPEND FOUND_BACKENDS "glfw_wgpu_emscripten")
+    list(APPEND FOUND_BACKENDS "glfw_wgpu_emscripten" "glfw_opengl3_emscripten")
 endif ()
 if (IMGUI_DAWN_FOUND AND glfw3_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_wgpu_dawn")
@@ -203,6 +200,7 @@ function (add_emscripten_flags TARGET)
     target_compile_options(${TARGET}
         PUBLIC
         -sDISABLE_EXCEPTION_CATCHING=1
+        -Os
     )
 
     target_link_options(${TARGET}
@@ -376,6 +374,16 @@ if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS)
 
     add_backend("glfw_wgpu_emscripten" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
     add_emscripten_flags(imgui_backend_glfw_wgpu_emscripten)
+endif ()
+
+if ("glfw_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
+
+    set(HEADER_FILES imgui_impl_glfw.h imgui_impl_opengl3.h)
+    set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_opengl3.cpp)
+    set(TARGET_LIBS glfw)
+
+    add_backend("glfw_opengl3_emscripten" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+    add_emscripten_flags(imgui_backend_glfw_opengl3_emscripten)
 endif ()
 
 if ("glfw_wgpu_dawn" IN_LIST SUPPORTED_BACKENDS)

@@ -26,7 +26,7 @@ if (IMGUI_DAWN_DIR AND 0) # example does not compile with latest Dawn
     target_link_libraries(example_glfw_wgpu_dawn PRIVATE imgui::imgui imgui::backend_glfw_wgpu_dawn)
 endif ()
 
-if (EMSCRIPTEN)
+if (IMGUI_EMSCRIPTEN_FOUND)
     add_executable(example_glfw_wgpu_emscripten)
 
     target_sources(example_glfw_wgpu_emscripten PRIVATE main.cpp)
