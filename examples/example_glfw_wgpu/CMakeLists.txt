@@ -18,7 +18,7 @@ project(example_glfw_wgpu)
 
 # find_package(imgui REQUIRED)
 
-if (IMGUI_DAWN_DIR)
+if (IMGUI_DAWN_DIR AND 0) # example does not compile with latest Dawn
     add_executable(example_glfw_wgpu_dawn)
 
     target_sources(example_glfw_wgpu_dawn PRIVATE main.cpp)
