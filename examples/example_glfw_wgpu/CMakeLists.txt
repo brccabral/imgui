@@ -31,8 +31,6 @@ if (IMGUI_EMSCRIPTEN_FOUND)
 
     target_sources(example_glfw_wgpu_emscripten PRIVATE main.cpp)
 
-    target_link_options(example_glfw_wgpu_emscripten PRIVATE "-sUSE_WEBGPU=1")
-
     target_link_libraries(example_glfw_wgpu_emscripten PRIVATE imgui::imgui imgui::backend_glfw_wgpu_emscripten)
 
     set_target_properties(example_glfw_wgpu_emscripten PROPERTIES OUTPUT_NAME "index")

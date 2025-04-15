@@ -184,24 +184,15 @@ function (add_backend NAME HEADER_FILES CPP_FILES TARGET_LIBS)
     )
 endfunction ()
 
-function (add_emscripten_flags TARGET)
-    if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.57")
-        set(IMGUI_EMSCRIPTEN_GLFW3 "--use-port=contrib.glfw3" CACHE STRING "Choose between --use-port=contrib.glfw3 and -sUSE_GLFW=3 for GLFW implementation (default to --use-port=contrib.glfw3)")
-    else()
-        # cannot use contrib.glfw3 prior to 3.1.57
-        set(IMGUI_EMSCRIPTEN_GLFW3 "-sUSE_GLFW=3" CACHE STRING "Use -sUSE_GLFW=3 for GLFW implementation" FORCE)
-    endif()
-    if("${IMGUI_EMSCRIPTEN_GLFW3}" STREQUAL "--use-port=contrib.glfw3")
-        target_compile_options(${TARGET}
-            PUBLIC "${IMGUI_EMSCRIPTEN_GLFW3}"
-        )
-    endif()
+function (add_emscripten_flags TARGET USE_RENDER_FLAG USE_FILESYSTEM)
 
     target_compile_options(${TARGET}
         PUBLIC
         -sDISABLE_EXCEPTION_CATCHING=1
         -Os
     )
+
+    target_link_options(${TARGET} PUBLIC ${USE_RENDER_FLAG})
 
     target_link_options(${TARGET}
         PUBLIC
@@ -213,7 +204,7 @@ function (add_emscripten_flags TARGET)
         "-sDISABLE_EXCEPTION_CATCHING=1"
     )
 
-    if (EMSCRIPTEN_USE_FILE_SYSTEM)
+    if (USE_FILESYSTEM)
         target_link_options(${TARGET}
             PUBLIC
             "--no-heap-copy"
@@ -370,10 +361,17 @@ if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_wgpu.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_wgpu.cpp)
-    set(TARGET_LIBS glfw)
+
+    if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.57")
+        set(USE_RENDER_FLAG "--use-port=contrib.glfw3")
+    else()
+        # cannot use contrib.glfw3 prior to 3.1.57
+        set(USE_RENDER_FLAG -s USE_GLFW=3)
+    endif()
+    set(USE_RENDER_FLAG "${USE_RENDER_FLAG}" -sUSE_WEBGPU=1)
 
     add_backend("glfw_wgpu_emscripten" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
-    add_emscripten_flags(imgui_backend_glfw_wgpu_emscripten)
+    add_emscripten_flags(imgui_backend_glfw_wgpu_emscripten "${USE_RENDER_FLAG}" 0)
 endif ()
 
 if ("glfw_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
@@ -382,8 +380,15 @@ if ("glfw_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_opengl3.cpp)
     set(TARGET_LIBS glfw)
 
+    if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.57")
+        set(USE_RENDER_FLAG "--use-port=contrib.glfw3")
+    else()
+        # cannot use contrib.glfw3 prior to 3.1.57
+        set(USE_RENDER_FLAG "-sUSE_GLFW=3")
+    endif()
+
     add_backend("glfw_opengl3_emscripten" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
-    add_emscripten_flags(imgui_backend_glfw_opengl3_emscripten)
+    add_emscripten_flags(imgui_backend_glfw_opengl3_emscripten "${USE_RENDER_FLAG}" 0)
 endif ()
 
 if ("glfw_wgpu_dawn" IN_LIST SUPPORTED_BACKENDS)
