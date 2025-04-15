@@ -232,7 +232,7 @@ if ("sdl2_opengl3" IN_LIST SUPPORTED_BACKENDS)
     find_package(SDL2 REQUIRED)
     find_package(OpenGL REQUIRED)
 
-    set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_opengl2.h)
+    set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_opengl3.cpp)
     set(TARGET_LIBS SDL2::SDL2 OpenGL)
 
