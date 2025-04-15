@@ -18,16 +18,12 @@ else ()
 
     target_link_options(example_sdl3_opengl3_emscripten
         PRIVATE
-        "--shell-file=shell_minimal.html"
+        "--shell-file=${CMAKE_CURRENT_SOURCE_DIR}/../libs/emscripten/shell_minimal.html"
         "-sMODULARIZE=0"
     )
 
     set_target_properties(example_sdl3_opengl3_emscripten PROPERTIES OUTPUT_NAME "index")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
-
-    add_custom_command(TARGET example_sdl3_opengl3_emscripten PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_LIST_DIR}/../libs/emscripten/shell_minimal.html" ${CMAKE_BINARY_DIR}
-    )
 
     if (IMGUI_HTTP_PORT)
         set(HTTP_PORT ${IMGUI_HTTP_PORT})
