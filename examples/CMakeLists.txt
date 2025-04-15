@@ -1,3 +1,4 @@
+add_subdirectory(example_null)
 if ("glfw_opengl2" IN_LIST SUPPORTED_BACKENDS)
     add_subdirectory(example_glfw_opengl2)
 endif ()
