@@ -187,6 +187,53 @@ function (add_backend NAME HEADER_FILES CPP_FILES TARGET_LIBS)
     )
 endfunction ()
 
+function (add_emscripten_flags TARGET)
+    if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.57")
+        set(IMGUI_EMSCRIPTEN_GLFW3 "--use-port=contrib.glfw3" CACHE STRING "Choose between --use-port=contrib.glfw3 and -sUSE_GLFW=3 for GLFW implementation (default to --use-port=contrib.glfw3)")
+    else()
+        # cannot use contrib.glfw3 prior to 3.1.57
+        set(IMGUI_EMSCRIPTEN_GLFW3 "-sUSE_GLFW=3" CACHE STRING "Use -sUSE_GLFW=3 for GLFW implementation" FORCE)
+    endif()
+    if("${IMGUI_EMSCRIPTEN_GLFW3}" STREQUAL "--use-port=contrib.glfw3")
+        target_compile_options(${TARGET}
+            PUBLIC "${IMGUI_EMSCRIPTEN_GLFW3}"
+        )
+    endif()
+
+    target_compile_options(${TARGET}
+        PUBLIC
+        -sDISABLE_EXCEPTION_CATCHING=1
+    )
+
+    target_link_options(${TARGET}
+        PUBLIC
+        "${IMGUI_EMSCRIPTEN_GLFW3}"
+        "-sWASM=1"
+        "-sALLOW_MEMORY_GROWTH=1"
+        "-sNO_EXIT_RUNTIME=0"
+        "-sASSERTIONS=1"
+        "-sDISABLE_EXCEPTION_CATCHING=1"
+    )
+
+    if (EMSCRIPTEN_USE_FILE_SYSTEM)
+        target_link_options(${TARGET}
+            PUBLIC
+            "--no-heap-copy"
+            "--preload-file"
+            "${PROJECT_SOURCE_DIR}/misc/fonts@/fonts"
+        )
+    else ()
+        target_compile_options(${TARGET}
+            PUBLIC
+            -DIMGUI_DISABLE_FILE_FUNCTIONS
+        )
+        target_link_options(${TARGET}
+            PUBLIC
+            "-sNO_FILESYSTEM=1"
+        )
+    endif ()
+endfunction()
+
 if ("glfw_opengl2" IN_LIST SUPPORTED_BACKENDS)
     find_package(glfw3 REQUIRED)
     find_package(OpenGL REQUIRED)
@@ -328,52 +375,7 @@ if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS)
     set(TARGET_LIBS glfw)
 
     add_backend("glfw_wgpu_emscripten" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
-
-    if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.57")
-        set(IMGUI_EMSCRIPTEN_GLFW3 "--use-port=contrib.glfw3" CACHE STRING "Choose between --use-port=contrib.glfw3 and -sUSE_GLFW=3 for GLFW implementation (default to --use-port=contrib.glfw3)")
-    else()
-        # cannot use contrib.glfw3 prior to 3.1.57
-        set(IMGUI_EMSCRIPTEN_GLFW3 "-sUSE_GLFW=3" CACHE STRING "Use -sUSE_GLFW=3 for GLFW implementation" FORCE)
-    endif()
-    if("${IMGUI_EMSCRIPTEN_GLFW3}" STREQUAL "--use-port=contrib.glfw3")
-        target_compile_options(imgui_backend_glfw_wgpu_emscripten
-            PUBLIC "${IMGUI_EMSCRIPTEN_GLFW3}"
-        )
-    endif()
-
-    target_compile_options(imgui_backend_glfw_wgpu_emscripten
-        PUBLIC
-        -sDISABLE_EXCEPTION_CATCHING=1
-    )
-
-    target_link_options(imgui_backend_glfw_wgpu_emscripten
-        PUBLIC
-        "${IMGUI_EMSCRIPTEN_GLFW3}"
-        "-sWASM=1"
-        "-sALLOW_MEMORY_GROWTH=1"
-        "-sNO_EXIT_RUNTIME=0"
-        "-sASSERTIONS=1"
-        "-sDISABLE_EXCEPTION_CATCHING=1"
-    )
-
-    if (EMSCRIPTEN_USE_FILE_SYSTEM)
-        target_link_options(imgui_backend_glfw_wgpu_emscripten
-            PUBLIC
-            "--no-heap-copy"
-            "--preload-file"
-            "${PROJECT_SOURCE_DIR}/misc/fonts@/fonts"
-        )
-    else ()
-        target_compile_options(imgui_backend_glfw_wgpu_emscripten
-            PUBLIC
-            -DIMGUI_DISABLE_FILE_FUNCTIONS
-        )
-        target_link_options(imgui_backend_glfw_wgpu_emscripten
-            PUBLIC
-            "-sNO_FILESYSTEM=1"
-        )
-    endif ()
-
+    add_emscripten_flags(imgui_backend_glfw_wgpu_emscripten)
 endif ()
 
 if ("glfw_wgpu_dawn" IN_LIST SUPPORTED_BACKENDS)
