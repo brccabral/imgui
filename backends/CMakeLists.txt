@@ -114,6 +114,9 @@ set(FOUND_BACKENDS "")
 if (glfw3_FOUND AND OpenGL_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_opengl2" "glfw_opengl3")
 endif ()
+if (glfw3_FOUND AND OpenGL_FOUND AND IMGUI_EMSCRIPTEN_FOUND)
+    list(APPEND FOUND_BACKENDS "")
+endif ()
 if (glfw3_FOUND AND Vulkan_FOUND)
     list(APPEND FOUND_BACKENDS "glfw_vulkan")
 endif ()
@@ -338,19 +341,38 @@ if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS)
         )
     endif()
 
-    target_compile_options(imgui_backend_glfw_wgpu_emscripten PUBLIC -sDISABLE_EXCEPTION_CATCHING=1 -DIMGUI_DISABLE_FILE_FUNCTIONS=1)
+    target_compile_options(imgui_backend_glfw_wgpu_emscripten
+        PUBLIC
+        -sDISABLE_EXCEPTION_CATCHING=1
+    )
 
     target_link_options(imgui_backend_glfw_wgpu_emscripten
         PUBLIC
-        "-sUSE_WEBGPU=1"
         "${IMGUI_EMSCRIPTEN_GLFW3}"
         "-sWASM=1"
         "-sALLOW_MEMORY_GROWTH=1"
         "-sNO_EXIT_RUNTIME=0"
         "-sASSERTIONS=1"
         "-sDISABLE_EXCEPTION_CATCHING=1"
-        "-sNO_FILESYSTEM=1"
     )
+
+    if (EMSCRIPTEN_USE_FILE_SYSTEM)
+        target_link_options(imgui_backend_glfw_wgpu_emscripten
+            PUBLIC
+            "--no-heap-copy"
+            "--preload-file"
+            "${PROJECT_SOURCE_DIR}/misc/fonts@/fonts"
+        )
+    else ()
+        target_compile_options(imgui_backend_glfw_wgpu_emscripten
+            PUBLIC
+            -DIMGUI_DISABLE_FILE_FUNCTIONS
+        )
+        target_link_options(imgui_backend_glfw_wgpu_emscripten
+            PUBLIC
+            "-sNO_FILESYSTEM=1"
+        )
+    endif ()
 
 endif ()
 

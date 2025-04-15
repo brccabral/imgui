@@ -3,6 +3,7 @@ project(ImGui)
 
 option(BUILD_EXAMPLES "Build examples" ON)
 option(WITH_EXTRA_WARNINGS "Pass extra warnings to targets" OFF)
+option(EMSCRIPTEN_USE_FILE_SYSTEM "Include the misc/fonts/ folder as part of the build" OFF)
 
 if (WITH_EXTRA_WARNINGS)
     add_compile_options(-Wno-zero-as-null-pointer-constant -Wno-double-promotion -Wno-variadic-macros)
