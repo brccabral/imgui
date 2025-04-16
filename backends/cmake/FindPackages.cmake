@@ -58,7 +58,7 @@ if (EMSCRIPTEN)
     set(IMGUI_EMSCRIPTEN_FOUND ON PARENT_SCOPE)
     message(STATUS "Found emscripten ${EMSCRIPTEN_VERSION}")
 else ()
-    message(WARNING "emscripten not found. `cmake -DCMAKE_TOOLCHAIN_FILE=emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake`")
+    message(WARNING "emscripten not found. `cmake -DCMAKE_TOOLCHAIN_FILE=emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake ...`")
 endif ()
 
 if (IMGUI_DAWN_DIR)
