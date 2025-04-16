@@ -17,6 +17,7 @@ function (add_backend NAME HEADER_FILES CPP_FILES TARGET_LIBS)
     target_link_libraries(imgui_backend_${NAME} PUBLIC imgui::imgui)
     target_link_libraries(imgui_backend_${NAME} PUBLIC ${TARGET_LIBS})
 
+    set_target_properties(imgui_backend_${NAME} PROPERTIES EXPORT_NAME "backend_${NAME}")
     install(TARGETS imgui_backend_${NAME}
             EXPORT imguiTargets
             ARCHIVE DESTINATION lib
