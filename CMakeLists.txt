@@ -74,3 +74,9 @@ install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/imguiConfigVersion.cmake"
     DESTINATION share/cmake/imgui
 )
+
+configure_file(cmake/imguiConfig.cmake.in imguiConfig.cmake @ONLY)
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/imguiConfig.cmake"
+    DESTINATION share/cmake/imgui
+)
