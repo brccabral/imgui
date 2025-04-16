@@ -195,8 +195,72 @@ if ("glut_opengl2" IN_LIST SUPPORTED_BACKENDS)
 endif ()
 
 if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
-#    Allegro needs a config.h file, which is not compiled in imgui::imgui
-#    We add a new library in the `example_allegro5`
+    find_package(Allegro REQUIRED)
+
+    add_library(imgui_alegro STATIC)
+    add_library(imgui::imgui_alegro ALIAS imgui_alegro)
+
+    target_sources(imgui_alegro
+    PUBLIC
+        FILE_SET imgui_headers TYPE HEADERS
+            FILES
+            ${PROJECT_SOURCE_DIR}/imconfig.h
+            ${PROJECT_SOURCE_DIR}/imgui.h
+            ${PROJECT_SOURCE_DIR}/imgui_internal.h
+            ${PROJECT_SOURCE_DIR}/imstb_rectpack.h
+            ${PROJECT_SOURCE_DIR}/imstb_textedit.h
+            ${PROJECT_SOURCE_DIR}/imstb_truetype.h
+            BASE_DIRS ${PROJECT_SOURCE_DIR}
+        FILE_SET config_headers TYPE HEADERS
+            FILES ${PROJECT_SOURCE_DIR}/examples/example_allegro5/imconfig_allegro5.h
+            BASE_DIRS ${PROJECT_SOURCE_DIR}/examples/example_allegro5/
+    PRIVATE
+            ${PROJECT_SOURCE_DIR}/imgui.cpp
+            ${PROJECT_SOURCE_DIR}/imgui_demo.cpp
+            ${PROJECT_SOURCE_DIR}/imgui_draw.cpp
+            ${PROJECT_SOURCE_DIR}/imgui_tables.cpp
+            ${PROJECT_SOURCE_DIR}/imgui_widgets.cpp
+    )
+    target_compile_features(imgui_alegro PRIVATE cxx_std_11)
+    target_compile_options(imgui_alegro PRIVATE -Wall -Wformat)
+    target_compile_definitions(imgui_alegro PUBLIC "IMGUI_USER_CONFIG=<imconfig_allegro5.h>")
+
+    target_include_directories(imgui_alegro PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+    )
+
+    install(TARGETS imgui_alegro
+            EXPORT imguiTargets
+            ARCHIVE DESTINATION lib
+            FILE_SET imgui_headers DESTINATION include
+            FILE_SET config_headers DESTINATION include
+    )
+
+    add_library(imgui_backend_allegro5 STATIC)
+    add_library(imgui::backend_allegro5 ALIAS imgui_backend_allegro5)
+
+    target_sources(imgui_backend_allegro5
+    PUBLIC FILE_SET imgui_backend_allegro5_headers TYPE HEADERS FILES ${PROJECT_SOURCE_DIR}/backends/imgui_impl_allegro5.h BASE_DIRS ${PROJECT_SOURCE_DIR}/backends
+    PRIVATE ${PROJECT_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp
+    )
+    target_compile_features(imgui_backend_allegro5 PRIVATE cxx_std_11)
+    target_compile_options(imgui_backend_allegro5 PRIVATE -Wall -Wformat)
+
+    target_include_directories(imgui_backend_allegro5 PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/backends>
+        $<INSTALL_INTERFACE:include>
+    )
+
+    target_link_libraries(imgui_backend_allegro5 PUBLIC imgui::imgui_alegro)
+    target_link_libraries(imgui_backend_allegro5 PUBLIC allegro allegro_main allegro_primitives)
+
+    set_target_properties(imgui_backend_allegro5 PROPERTIES EXPORT_NAME "backend_allegro5")
+    install(TARGETS imgui_backend_allegro5
+            EXPORT imguiTargets
+            ARCHIVE DESTINATION lib
+            FILE_SET imgui_backend_allegro5_headers DESTINATION include
+    )
 endif ()
 
 if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS)
