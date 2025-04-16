@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(ImGui)
+project(ImGui VERSION 1.92.0)
 
 option(BUILD_EXAMPLES "Build examples" ON)
 option(WITH_EXTRA_WARNINGS "Pass extra warnings to targets" OFF)
@@ -62,4 +62,15 @@ endif ()
 install(EXPORT imguiTargets
         NAMESPACE imgui::
         DESTINATION share/cmake/imgui
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/imguiConfigVersion.cmake"
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/imguiConfigVersion.cmake"
+    DESTINATION share/cmake/imgui
 )
