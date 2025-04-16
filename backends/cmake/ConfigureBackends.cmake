@@ -212,8 +212,8 @@ if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
             ${PROJECT_SOURCE_DIR}/imstb_truetype.h
             BASE_DIRS ${PROJECT_SOURCE_DIR}
         FILE_SET config_headers TYPE HEADERS
-            FILES ${PROJECT_SOURCE_DIR}/examples/example_allegro5/imconfig_allegro5.h
-            BASE_DIRS ${PROJECT_SOURCE_DIR}/examples/example_allegro5/
+            FILES ${PROJECT_SOURCE_DIR}/backends/imconfig_allegro5.h
+            BASE_DIRS ${PROJECT_SOURCE_DIR}/backends
     PRIVATE
             ${PROJECT_SOURCE_DIR}/imgui.cpp
             ${PROJECT_SOURCE_DIR}/imgui_demo.cpp
@@ -241,7 +241,10 @@ if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
     add_library(imgui::backend_allegro5 ALIAS imgui_backend_allegro5)
 
     target_sources(imgui_backend_allegro5
-    PUBLIC FILE_SET imgui_backend_allegro5_headers TYPE HEADERS FILES ${PROJECT_SOURCE_DIR}/backends/imgui_impl_allegro5.h BASE_DIRS ${PROJECT_SOURCE_DIR}/backends
+    PUBLIC
+        FILE_SET imgui_backend_allegro5_headers TYPE HEADERS
+            FILES ${PROJECT_SOURCE_DIR}/backends/imgui_impl_allegro5.h
+            BASE_DIRS ${PROJECT_SOURCE_DIR}/backends
     PRIVATE ${PROJECT_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp
     )
     target_compile_features(imgui_backend_allegro5 PRIVATE cxx_std_11)
