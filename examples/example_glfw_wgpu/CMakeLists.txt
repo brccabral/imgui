@@ -1,7 +1,11 @@
 # Building for desktop (WebGPU-native) with Dawn:
 #  1. git clone https://github.com/google/dawn dawn
-#  2. cmake -B build -DIMGUI_DAWN_DIR=dawn
-#  3. cmake --build build --target example_glfw_wgpu_dawn
+#  2. cd dawn
+# command 3. will install at <dawn>/cmake-build-debug-clang/install, it takes a while
+#  3. CC=clang CXX=clang++ cmake -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" -B cmake-build-debug-clang -S . -DDAWN_ENABLE_INSTALL=ON -DCMAKE_INSTALL_PREFIX=cmake-build-debug-clang/install -DBUILD_SAMPLES=OFF -DDAWN_FETCH_DEPENDENCIES=ON -DDAWN_USE_GLFW=ON -DDAWN_ENABLE_VULKAN=ON -DTINT_BUILD_CMD_TOOLS=OFF -DTINT_BUILD_TESTS=OFF -DDAWN_ENABLE_SPIRV_VALIDATION=OFF
+# build ImGui with Dawn
+#  4. cmake -B build -DDawn_DIR=<dawn>/cmake-build-debug-clang/install/lib/cmake/Dawn
+#  5. cmake --build build --target example_glfw_wgpu_dawn
 # The resulting binary will be found at one of the following locations:
 #   * build/Debug/example_glfw_wgpu_dawn[.exe]
 #   * build/example_glfw_wgpu_dawn[.exe]
@@ -18,7 +22,7 @@ project(example_glfw_wgpu)
 
 # find_package(imgui REQUIRED)
 
-if (IMGUI_DAWN_DIR AND 0) # example does not compile with latest Dawn
+if (HAS_IMGUI_DAWN AND 0) # example does not compile with latest Dawn
     add_executable(example_glfw_wgpu_dawn)
 
     target_sources(example_glfw_wgpu_dawn PRIVATE main.cpp)
