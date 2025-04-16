@@ -33,6 +33,7 @@ else ()
     add_custom_target(run_example_glfw_opengl3_emscripten
         COMMAND python3 -m http.server -d $<TARGET_FILE_DIR:example_glfw_opengl3_emscripten> ${HTTP_PORT}
         DEPENDS example_glfw_opengl3_emscripten
-        COMMAND "Run a python3 http.server in example_glfw_opengl3_emscripten location http://127.0.0.1:${HTTP_PORT}/"
+        COMMENT "Run a python3 http.server in example_glfw_opengl3_emscripten location http://127.0.0.1:${HTTP_PORT}/"
+        USES_TERMINAL
     )
 endif ()
