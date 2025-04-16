@@ -58,3 +58,8 @@ add_subdirectory(backends)
 if (BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif ()
+
+install(EXPORT imguiTargets
+        NAMESPACE imgui::
+        DESTINATION share/cmake/imgui
+)
