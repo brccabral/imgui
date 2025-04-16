@@ -3,5 +3,44 @@
 set(SUPPORTED_BACKENDS "@SUPPORTED_BACKENDS@")
 set(HAS_IMGUI_EMSCRIPTEN "@HAS_IMGUI_EMSCRIPTEN@")
 set(HAS_IMGUI_DAWN "@HAS_IMGUI_DAWN@")
+set(HAS_IMGUI_ALLEGRO "@HAS_IMGUI_ALLEGRO@")
+set(HAS_IMGUI_GLFW "@HAS_IMGUI_GLFW3@")
+set(HAS_IMGUI_GLUT "@HAS_IMGUI_GLUT@")
+set(HAS_IMGUI_OPENGL "@HAS_IMGUI_OPENGL@")
+set(HAS_IMGUI_SDL2 "@HAS_IMGUI_SDL2@")
+set(HAS_IMGUI_SDL3 "@HAS_IMGUI_SDL3@")
+set(HAS_IMGUI_VULKAN "@HAS_IMGUI_VULKAN@")
+
+if (HAS_IMGUI_GLFW)
+    find_package(glfw3 REQUIRED)
+endif ()
+
+if (HAS_IMGUI_OPENGL)
+    find_package(OpenGL REQUIRED)
+endif ()
+
+if (HAS_IMGUI_SDL2)
+    find_package(SDL2 REQUIRED)
+endif ()
+
+if (HAS_IMGUI_SDL3)
+    find_package(SDL3 REQUIRED)
+endif ()
+
+if (HAS_IMGUI_VULKAN)
+    find_package(Vulkan REQUIRED)
+endif ()
+
+if (HAS_IMGUI_ALLEGRO)
+    find_package(Allegro REQUIRED)
+endif ()
+
+if (HAS_IMGUI_GLUT)
+    find_package(GLUT REQUIRED)
+endif ()
+
+if (HAS_IMGUI_DAWN)
+    find_package(Dawn REQUIRED)
+endif ()
 
 include("${CMAKE_CURRENT_LIST_DIR}/imguiTargets.cmake")
