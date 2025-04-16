@@ -202,6 +202,7 @@ if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_wgpu.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_wgpu.cpp)
+    set(TARGET_LIBS "")
 
     if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.57")
         set(USE_RENDER_FLAG "--use-port=contrib.glfw3")
@@ -219,7 +220,7 @@ if ("glfw_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_opengl3.cpp)
-    set(TARGET_LIBS glfw)
+    set(TARGET_LIBS "")
 
     if(EMSCRIPTEN_VERSION VERSION_GREATER_EQUAL "3.1.57")
         set(USE_RENDER_FLAG "--use-port=contrib.glfw3")
@@ -236,6 +237,7 @@ if ("sdl2_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_opengl3.cpp)
+    set(TARGET_LIBS "")
 
     set(USE_RENDER_FLAG "-sUSE_SDL=2")
 
@@ -247,6 +249,7 @@ if ("sdl3_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_opengl3.cpp)
+    set(TARGET_LIBS "")
 
     set(USE_RENDER_FLAG "-sUSE_SDL=3")
 
@@ -255,19 +258,14 @@ if ("sdl3_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
 endif ()
 
 if ("glfw_wgpu_dawn" IN_LIST SUPPORTED_BACKENDS)
-    add_library(imgui_backend_glfw_wgpu_dawn STATIC)
-    add_library(imgui::backend_glfw_wgpu_dawn ALIAS imgui_backend_glfw_wgpu_dawn)
+    set(HEADER_FILES imgui_impl_glfw.h imgui_impl_wgpu.h)
+    set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_wgpu.cpp)
+    set(TARGET_LIBS webgpu_dawn webgpu_cpp webgpu_glfw glfw)
+
+    add_backend("glfw_wgpu_dawn" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 
     target_compile_features(imgui_backend_glfw_wgpu_dawn PRIVATE cxx_std_17)
-
-    target_sources(imgui_backend_glfw_wgpu_dawn
-        PUBLIC FILE_SET HEADERS FILES imgui_impl_glfw.h imgui_impl_wgpu.h
-        PRIVATE imgui_impl_glfw.cpp imgui_impl_wgpu.cpp
-    )
-
     target_compile_definitions(imgui_backend_glfw_wgpu_dawn PUBLIC "IMGUI_IMPL_WEBGPU_BACKEND_DAWN")
-
-    target_link_libraries(imgui_backend_glfw_wgpu_dawn PUBLIC imgui::imgui webgpu_dawn webgpu_cpp webgpu_glfw glfw)
 endif ()
 
 if ("android_opengl3" IN_LIST SUPPORTED_BACKENDS)
@@ -275,6 +273,7 @@ if ("android_opengl3" IN_LIST SUPPORTED_BACKENDS)
     set(CPP_FILES imgui_impl_android.cpp imgui_impl_opengl3.cpp)
     set(TARGET_LIBS android EGL GLESv3 log)
 
+    # android_opengl3 is a SHARED lib, can't use `add_backend`
     add_library(imgui_backend_android_opengl3 SHARED)
     add_library(imgui::backend_android_opengl3 ALIAS imgui_backend_android_opengl3)
 
