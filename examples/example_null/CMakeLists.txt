@@ -13,7 +13,11 @@ target_sources(example_null
         ../../imgui_widgets.cpp
 )
 target_compile_features(example_null PRIVATE cxx_std_11)
-target_compile_options(example_null PRIVATE -Wall -Wformat)
+if (MSVC)
+    target_compile_options(example_null PRIVATE /W3)
+else ()
+    target_compile_options(example_null PRIVATE -Wall -Wformat)
+endif ()
 
 target_include_directories(example_null PRIVATE ../..)
 

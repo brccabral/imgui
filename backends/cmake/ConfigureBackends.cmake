@@ -7,7 +7,11 @@ function (add_backend NAME HEADER_FILES CPP_FILES TARGET_LIBS)
     PRIVATE ${CPP_FILES}
     )
     target_compile_features(imgui_backend_${NAME} PRIVATE cxx_std_11)
-    target_compile_options(imgui_backend_${NAME} PRIVATE -Wall -Wformat)
+    if (MSVC)
+        target_compile_options(imgui_backend_${NAME} PRIVATE /W3)
+    else ()
+        target_compile_options(imgui_backend_${NAME} PRIVATE -Wall -Wformat)
+    endif ()
 
     target_include_directories(imgui_backend_${NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -222,7 +226,11 @@ if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
             ${PROJECT_SOURCE_DIR}/imgui_widgets.cpp
     )
     target_compile_features(imgui_alegro PRIVATE cxx_std_11)
-    target_compile_options(imgui_alegro PRIVATE -Wall -Wformat)
+    if (MSVC)
+        target_compile_options(imgui_alegro PRIVATE /W3)
+    else ()
+        target_compile_options(imgui_alegro PRIVATE -Wall -Wformat)
+    endif ()
     target_compile_definitions(imgui_alegro PUBLIC "IMGUI_USER_CONFIG=<imconfig_allegro5.h>")
 
     target_include_directories(imgui_alegro PUBLIC
@@ -248,7 +256,11 @@ if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
     PRIVATE ${PROJECT_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp
     )
     target_compile_features(imgui_backend_allegro5 PRIVATE cxx_std_11)
-    target_compile_options(imgui_backend_allegro5 PRIVATE -Wall -Wformat)
+    if (MSVC)
+        target_compile_options(imgui_backend_allegro5 PRIVATE /W3)
+    else ()
+        target_compile_options(imgui_backend_allegro5 PRIVATE -Wall -Wformat)
+    endif ()
 
     target_include_directories(imgui_backend_allegro5 PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/backends>

@@ -40,7 +40,11 @@ PRIVATE
         imgui_widgets.cpp
 )
 target_compile_features(imgui PRIVATE cxx_std_11)
-target_compile_options(imgui PRIVATE -Wall -Wformat)
+if (MSVC)
+    target_compile_options(imgui PRIVATE /W3)
+else ()
+    target_compile_options(imgui PRIVATE -Wall -Wformat)
+endif ()
 
 target_include_directories(imgui PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
