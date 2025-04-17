@@ -36,7 +36,10 @@ if (HAS_IMGUI_ALLEGRO)
 endif ()
 
 if (HAS_IMGUI_GLUT)
-    find_package(GLUT REQUIRED)
+    find_package(GLUT QUIET)
+    if (NOT GLUT_FOUND)
+        find_package(FreeGLUT REQUIRED)
+    endif ()
 endif ()
 
 if (HAS_IMGUI_DAWN)
