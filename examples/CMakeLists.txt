@@ -72,3 +72,6 @@ if ("win32_directx12" IN_LIST SUPPORTED_BACKENDS
 )
     add_subdirectory(example_win32_directx12)
 endif ()
+if ("win32_opengl3" IN_LIST SUPPORTED_BACKENDS)
+    add_subdirectory(example_win32_opengl3)
+endif ()

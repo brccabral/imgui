@@ -469,3 +469,11 @@ if ("win64_directx12" IN_LIST SUPPORTED_BACKENDS)
     target_compile_options(imgui_backend_win64_directx12 PUBLIC /nologo /utf-8 /DUNICODE /D_UNICODE)
     target_link_directories(imgui_backend_win64_directx12 PUBLIC ${IMGUI_DIRECTX_12_X64_LIB_DIR})
 endif ()
+
+if ("win32_opengl3" IN_LIST SUPPORTED_BACKENDS)
+    set(HEADER_FILES imgui_impl_opengl3.h imgui_impl_win32.h)
+    set(CPP_FILES imgui_impl_opengl3.cpp imgui_impl_win32.cpp)
+    set(TARGET_LIBS opengl32)
+
+    add_backend("win32_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
