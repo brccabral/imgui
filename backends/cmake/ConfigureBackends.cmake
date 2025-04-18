@@ -31,6 +31,13 @@ endfunction ()
 
 function (add_emscripten_flags TARGET USE_RENDER_FLAG USE_FILESYSTEM)
 
+    target_sources(${TARGET}
+        PUBLIC
+            FILE_SET HEADERS
+            FILES ${PROJECT_SOURCE_DIR}/backends/emscripten_mainloop_stub.h
+            BASE_DIRS ${PROJECT_SOURCE_DIR}/backends
+    )
+
     target_compile_options(${TARGET}
         PUBLIC
         -sDISABLE_EXCEPTION_CATCHING=1
