@@ -389,3 +389,13 @@ if ("android_opengl3" IN_LIST SUPPORTED_BACKENDS)
             FILE_SET HEADERS DESTINATION include
     )
 endif ()
+
+if ("win32_directx9" IN_LIST SUPPORTED_BACKENDS)
+    set(HEADER_FILES imgui_impl_dx9.h imgui_impl_win32.h)
+    set(CPP_FILES imgui_impl_dx9.cpp imgui_impl_win32.cpp)
+    set(TARGET_LIBS ${IMGUI_DIRECTX_9_X86_LIBRARIES})
+
+    add_backend("win32_directx9" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+    target_compile_options(imgui_backend_win32_directx9 PUBLIC /nologo /utf-8 /DUNICODE /D_UNICODE)
+    target_link_directories(imgui_backend_win32_directx9 PUBLIC ${IMGUI_DIRECTX_9_X86_LIB_DIR})
+endif ()

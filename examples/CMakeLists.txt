@@ -52,3 +52,8 @@ if ("glfw_wgpu_emscripten" IN_LIST SUPPORTED_BACKENDS
 )
     add_subdirectory(example_glfw_wgpu)
 endif ()
+if ("win32_directx9" IN_LIST SUPPORTED_BACKENDS
+    OR "win64_directx9" IN_LIST SUPPORTED_BACKENDS
+)
+    add_subdirectory(example_win32_directx9)
+endif ()

@@ -103,41 +103,43 @@ function (find_directx NAME INCLUDE_FILE LIBS_NAMES)
     PATH_SUFFIXES um
     NO_CACHE
     NO_DEFAULT_PATH)
-    
-    find_library(${NAME}_X64_LIBRARY ${LIBS_NAMES}
-    PATHS "$ENV{WindowsSdkDir}/Lib/$ENV{WindowsSDKVersion}"
-    PATH_SUFFIXES um/x64
-    NO_CACHE
-    NO_DEFAULT_PATH)
-    
-    find_library(${NAME}_X86_LIBRARY ${LIBS_NAMES}
-    PATHS "$ENV{WindowsSdkDir}/Lib/$ENV{WindowsSDKVersion}"
-    PATH_SUFFIXES um/x86
-    NO_CACHE
-    NO_DEFAULT_PATH)
 
-    if (NOT ${${NAME}_INCLUDE_DIR} STREQUAL "" AND NOT ${${NAME}_X64_LIBRARY} STREQUAL "")
-        set(HAS_IMGUI_${NAME}_X64 ON)
-        set(HAS_IMGUI_${NAME}_X64 ON PARENT_SCOPE)
-        set(IMGUI_${NAME}_X64_INCLUDE_DIR ${${NAME}_INCLUDE_DIR})
-        set(IMGUI_${NAME}_X64_INCLUDE_DIR ${${NAME}_INCLUDE_DIR} PARENT_SCOPE)
-        get_filename_component(${NAME}_X64_LIB_DIR "${${NAME}_X64_LIBRARY}" DIRECTORY)
-        set(IMGUI_${NAME}_X64_LIB_DIR ${${NAME}_X64_LIB_DIR})
-        set(IMGUI_${NAME}_X64_LIB_DIR ${${NAME}_X64_LIB_DIR} PARENT_SCOPE)
-        set(IMGUI_${NAME}_X64_LIBRARIES ${LIBS_NAMES})
-        set(IMGUI_${NAME}_X64_LIBRARIES ${LIBS_NAMES} PARENT_SCOPE)
-    endif ()
+    if (CMAKE_GENERATOR_PLATFORM STREQUAL "win32")
+        find_library(${NAME}_X86_LIBRARY ${LIBS_NAMES}
+        PATHS "$ENV{WindowsSdkDir}/Lib/$ENV{WindowsSDKVersion}"
+        PATH_SUFFIXES um/x86
+        NO_CACHE
+        NO_DEFAULT_PATH)
 
-    if (NOT ${${NAME}_INCLUDE_DIR} STREQUAL "" AND NOT ${${NAME}_X86_LIBRARY} STREQUAL "")
-        set(HAS_IMGUI_${NAME}_X86 ON)
-        set(HAS_IMGUI_${NAME}_X86 ON PARENT_SCOPE)
-        set(IMGUI_${NAME}_X86_INCLUDE_DIR ${${NAME}_INCLUDE_DIR})
-        set(IMGUI_${NAME}_X86_INCLUDE_DIR ${${NAME}_INCLUDE_DIR} PARENT_SCOPE)
-        get_filename_component(${NAME}_X86_LIB_DIR "${${NAME}_X86_LIBRARY}" DIRECTORY)
-        set(IMGUI_${NAME}_X86_LIB_DIR ${${NAME}_X86_LIB_DIR})
-        set(IMGUI_${NAME}_X86_LIB_DIR ${${NAME}_X86_LIB_DIR} PARENT_SCOPE)
-        set(IMGUI_${NAME}_X86_LIBRARIES ${LIBS_NAMES})
-        set(IMGUI_${NAME}_X86_LIBRARIES ${LIBS_NAMES} PARENT_SCOPE)
+        if (NOT ${${NAME}_INCLUDE_DIR} STREQUAL "" AND NOT ${${NAME}_X86_LIBRARY} STREQUAL "")
+            set(HAS_IMGUI_${NAME}_X86 ON)
+            set(HAS_IMGUI_${NAME}_X86 ON PARENT_SCOPE)
+            set(IMGUI_${NAME}_X86_INCLUDE_DIR ${${NAME}_INCLUDE_DIR})
+            set(IMGUI_${NAME}_X86_INCLUDE_DIR ${${NAME}_INCLUDE_DIR} PARENT_SCOPE)
+            get_filename_component(${NAME}_X86_LIB_DIR "${${NAME}_X86_LIBRARY}" DIRECTORY)
+            set(IMGUI_${NAME}_X86_LIB_DIR ${${NAME}_X86_LIB_DIR})
+            set(IMGUI_${NAME}_X86_LIB_DIR ${${NAME}_X86_LIB_DIR} PARENT_SCOPE)
+            set(IMGUI_${NAME}_X86_LIBRARIES ${LIBS_NAMES})
+            set(IMGUI_${NAME}_X86_LIBRARIES ${LIBS_NAMES} PARENT_SCOPE)
+        endif ()
+    else ()
+        find_library(${NAME}_X64_LIBRARY ${LIBS_NAMES}
+        PATHS "$ENV{WindowsSdkDir}/Lib/$ENV{WindowsSDKVersion}"
+        PATH_SUFFIXES um/x64
+        NO_CACHE
+        NO_DEFAULT_PATH)
+
+        if (NOT ${${NAME}_INCLUDE_DIR} STREQUAL "" AND NOT ${${NAME}_X64_LIBRARY} STREQUAL "")
+            set(HAS_IMGUI_${NAME}_X64 ON)
+            set(HAS_IMGUI_${NAME}_X64 ON PARENT_SCOPE)
+            set(IMGUI_${NAME}_X64_INCLUDE_DIR ${${NAME}_INCLUDE_DIR})
+            set(IMGUI_${NAME}_X64_INCLUDE_DIR ${${NAME}_INCLUDE_DIR} PARENT_SCOPE)
+            get_filename_component(${NAME}_X64_LIB_DIR "${${NAME}_X64_LIBRARY}" DIRECTORY)
+            set(IMGUI_${NAME}_X64_LIB_DIR ${${NAME}_X64_LIB_DIR})
+            set(IMGUI_${NAME}_X64_LIB_DIR ${${NAME}_X64_LIB_DIR} PARENT_SCOPE)
+            set(IMGUI_${NAME}_X64_LIBRARIES ${LIBS_NAMES})
+            set(IMGUI_${NAME}_X64_LIBRARIES ${LIBS_NAMES} PARENT_SCOPE)
+        endif ()
     endif ()
 endfunction ()
 
@@ -158,7 +160,7 @@ if (MSVC)
     else ()
         message(WARNING "DirectX 9 x86 not found")
     endif ()
-    
+
     if (${HAS_IMGUI_DIRECTX_10_X64})
         message(STATUS "Found DirectX 10 x64")
     else ()
@@ -169,7 +171,7 @@ if (MSVC)
     else ()
         message(WARNING "DirectX 10 x86 not found")
     endif ()
-    
+
     if (${HAS_IMGUI_DIRECTX_11_X64})
         message(STATUS "Found DirectX 11 x64")
     else ()
@@ -180,7 +182,7 @@ if (MSVC)
     else ()
         message(WARNING "DirectX 11 x86 not found")
     endif ()
-    
+
     if (${HAS_IMGUI_DIRECTX_12_X64})
         message(STATUS "Found DirectX 12 x64")
     else ()
