@@ -439,3 +439,13 @@ if ("win64_directx9" IN_LIST SUPPORTED_BACKENDS)
     target_compile_options(imgui_backend_win64_directx9 PUBLIC /nologo /utf-8 /DUNICODE /D_UNICODE)
     target_link_directories(imgui_backend_win64_directx9 PUBLIC ${IMGUI_DIRECTX_9_X64_LIB_DIR})
 endif ()
+
+if ("win64_directx10" IN_LIST SUPPORTED_BACKENDS)
+    set(HEADER_FILES imgui_impl_dx10.h imgui_impl_win32.h)
+    set(CPP_FILES imgui_impl_dx10.cpp imgui_impl_win32.cpp)
+    set(TARGET_LIBS ${IMGUI_DIRECTX_10_X64_LIBRARIES})
+
+    add_backend("win64_directx10" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+    target_compile_options(imgui_backend_win64_directx10 PUBLIC /nologo /utf-8 /DUNICODE /D_UNICODE)
+    target_link_directories(imgui_backend_win64_directx10 PUBLIC ${IMGUI_DIRECTX_10_X64_LIB_DIR})
+endif ()
