@@ -477,3 +477,11 @@ if ("win32_opengl3" IN_LIST SUPPORTED_BACKENDS)
 
     add_backend("win32_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
+
+if ("win32_vulkan" IN_LIST SUPPORTED_BACKENDS)
+    set(HEADER_FILES imgui_impl_vulkan.h imgui_impl_win32.h)
+    set(CPP_FILES imgui_impl_vulkan.cpp imgui_impl_win32.cpp)
+    set(TARGET_LIBS Vulkan::Vulkan)
+
+    add_backend("win32_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+endif ()
