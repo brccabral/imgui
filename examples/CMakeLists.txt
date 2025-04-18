@@ -62,3 +62,8 @@ if ("win32_directx10" IN_LIST SUPPORTED_BACKENDS
 )
     add_subdirectory(example_win32_directx10)
 endif ()
+if ("win32_directx11" IN_LIST SUPPORTED_BACKENDS
+    OR "win64_directx11" IN_LIST SUPPORTED_BACKENDS
+)
+    add_subdirectory(example_win32_directx11)
+endif ()
