@@ -75,7 +75,7 @@ if ("glfw_opengl2" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_opengl2.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_opengl2.cpp)
-    set(TARGET_LIBS glfw OpenGL)
+    set(TARGET_LIBS glfw OpenGL::GL)
 
     add_backend("glfw_opengl2" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
@@ -86,7 +86,7 @@ if ("glfw_opengl3" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_opengl3.cpp)
-    set(TARGET_LIBS glfw OpenGL)
+    set(TARGET_LIBS glfw OpenGL::GL)
 
     add_backend("glfw_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
@@ -108,7 +108,7 @@ if ("sdl2_opengl2" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_opengl2.h)
     set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_opengl2.cpp)
-    set(TARGET_LIBS SDL2::SDL2 OpenGL)
+    set(TARGET_LIBS SDL2::SDL2main SDL2::SDL2 OpenGL::GL)
 
     add_backend("sdl2_opengl2" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
@@ -119,7 +119,7 @@ if ("sdl2_opengl3" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_opengl3.cpp)
-    set(TARGET_LIBS SDL2::SDL2 OpenGL)
+    set(TARGET_LIBS SDL2::SDL2main SDL2::SDL2 OpenGL::GL)
 
     add_backend("sdl2_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
@@ -129,7 +129,7 @@ if ("sdl2_sdlrenderer2" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_sdlrenderer2.h)
     set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_sdlrenderer2.cpp)
-    set(TARGET_LIBS SDL2::SDL2)
+    set(TARGET_LIBS SDL2::SDL2main SDL2::SDL2)
 
     add_backend("sdl2_sdlrenderer2" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
@@ -140,7 +140,7 @@ if ("sdl2_vulkan" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl2.h imgui_impl_vulkan.h)
     set(CPP_FILES imgui_impl_sdl2.cpp imgui_impl_vulkan.cpp)
-    set(TARGET_LIBS SDL2::SDL2 Vulkan::Vulkan)
+    set(TARGET_LIBS SDL2::SDL2main SDL2::SDL2 Vulkan::Vulkan)
 
     add_backend("sdl2_vulkan" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
@@ -151,7 +151,7 @@ if ("sdl3_opengl3" IN_LIST SUPPORTED_BACKENDS)
 
     set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_opengl3.h)
     set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_opengl3.cpp)
-    set(TARGET_LIBS SDL3::SDL3 OpenGL)
+    set(TARGET_LIBS SDL3::SDL3 OpenGL::GL)
 
     add_backend("sdl3_opengl3" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 endif ()
@@ -273,7 +273,7 @@ if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
     )
 
     target_link_libraries(imgui_backend_allegro5 PUBLIC imgui::imgui_alegro)
-    target_link_libraries(imgui_backend_allegro5 PUBLIC allegro allegro_main allegro_primitives)
+    target_link_libraries(imgui_backend_allegro5 PUBLIC Allegro::allegro Allegro::allegro_main Allegro::allegro_primitives Allegro::allegro_color Allegro::allegro_image Allegro::allegro_font Allegro::allegro_audio Allegro::allegro_memfile Allegro::allegro_dialog)
 
     set_target_properties(imgui_backend_allegro5 PROPERTIES EXPORT_NAME "backend_allegro5")
     install(TARGETS imgui_backend_allegro5
