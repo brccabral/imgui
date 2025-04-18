@@ -45,17 +45,23 @@ PRIVATE
 )
 
 if (WITH_FREETYPE)
-    find_package(Freetype REQUIRED)
-
     target_sources(imgui
         PRIVATE
             misc/freetype/imgui_freetype.cpp
     )
-    if (MSVC)
-        target_include_directories(imgui PUBLIC ${FREETYPE_INCLUDE_DIRS})
-        target_link_libraries(imgui PUBLIC ${FREETYPE_LIBRARIES})
+
+    if (EMSCRIPTEN)
+        target_compile_options(imgui PUBLIC "-sUSE_FREETYPE=1")
+        target_link_options(imgui PUBLIC "-sUSE_FREETYPE=1")
     else ()
-        target_link_libraries(imgui PUBLIC Freetype::Freetype)
+        find_package(Freetype REQUIRED)
+
+        if (MSVC)
+            target_include_directories(imgui PUBLIC ${FREETYPE_INCLUDE_DIRS})
+            target_link_libraries(imgui PUBLIC ${FREETYPE_LIBRARIES})
+        else ()
+            target_link_libraries(imgui PUBLIC Freetype::Freetype)
+        endif ()
     endif ()
 endif ()
 
