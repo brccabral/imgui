@@ -32,7 +32,9 @@ endif ()
 if ("sdl3_sdlgpu3" IN_LIST SUPPORTED_BACKENDS)
     add_subdirectory(example_sdl3_sdlgpu3)
 endif ()
-if ("sdl3_sdlrenderer3" IN_LIST SUPPORTED_BACKENDS)
+if ("sdl3_sdlrenderer3" IN_LIST SUPPORTED_BACKENDS
+    OR "sdl3_sdlrenderer3_emscripten" IN_LIST SUPPORTED_BACKENDS
+)
     add_subdirectory(example_sdl3_sdlrenderer3)
 endif ()
 if ("sdl3_vulkan" IN_LIST SUPPORTED_BACKENDS)

@@ -364,6 +364,18 @@ if ("sdl3_opengl3_emscripten" IN_LIST SUPPORTED_BACKENDS)
     add_emscripten_flags(imgui_backend_sdl3_opengl3_emscripten "${USE_RENDER_FLAG}" 1)
 endif ()
 
+if ("sdl3_sdlrenderer3_emscripten" IN_LIST SUPPORTED_BACKENDS)
+
+    set(HEADER_FILES imgui_impl_sdl3.h imgui_impl_sdlrenderer3.h)
+    set(CPP_FILES imgui_impl_sdl3.cpp imgui_impl_sdlrenderer3.cpp)
+    set(TARGET_LIBS "")
+
+    set(USE_RENDER_FLAG "-sUSE_SDL=3")
+
+    add_backend("sdl3_sdlrenderer3_emscripten" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
+    add_emscripten_flags(imgui_backend_sdl3_sdlrenderer3_emscripten "${USE_RENDER_FLAG}" 1)
+endif ()
+
 if ("glfw_wgpu_dawn" IN_LIST SUPPORTED_BACKENDS)
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_wgpu.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_wgpu.cpp)
