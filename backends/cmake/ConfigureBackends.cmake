@@ -243,6 +243,21 @@ if ("allegro5" IN_LIST SUPPORTED_BACKENDS)
         $<INSTALL_INTERFACE:include>
     )
 
+    if (WITH_FREETYPE)
+        find_package(Freetype REQUIRED)
+    
+        target_sources(imgui_alegro
+            PRIVATE
+            ${PROJECT_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp
+        )
+        if (MSVC)
+            target_include_directories(imgui_alegro PUBLIC ${FREETYPE_INCLUDE_DIRS})
+            target_link_libraries(imgui_alegro PUBLIC ${FREETYPE_LIBRARIES})
+        else ()
+            target_link_libraries(imgui_alegro PUBLIC Freetype::Freetype)
+        endif ()
+    endif ()
+
     install(TARGETS imgui_alegro
             EXPORT imguiTargets
             ARCHIVE DESTINATION lib

@@ -43,6 +43,22 @@ PRIVATE
         imgui_tables.cpp
         imgui_widgets.cpp
 )
+
+if (WITH_FREETYPE)
+    find_package(Freetype REQUIRED)
+
+    target_sources(imgui
+        PRIVATE
+            misc/freetype/imgui_freetype.cpp
+    )
+    if (MSVC)
+        target_include_directories(imgui PUBLIC ${FREETYPE_INCLUDE_DIRS})
+        target_link_libraries(imgui PUBLIC ${FREETYPE_LIBRARIES})
+    else ()
+        target_link_libraries(imgui PUBLIC Freetype::Freetype)
+    endif ()
+endif ()
+
 target_compile_features(imgui PRIVATE cxx_std_11)
 if (MSVC)
     target_compile_options(imgui PRIVATE /W3)
