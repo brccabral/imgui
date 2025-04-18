@@ -345,7 +345,7 @@ endif ()
 if ("glfw_wgpu_dawn" IN_LIST SUPPORTED_BACKENDS)
     set(HEADER_FILES imgui_impl_glfw.h imgui_impl_wgpu.h)
     set(CPP_FILES imgui_impl_glfw.cpp imgui_impl_wgpu.cpp)
-    set(TARGET_LIBS dawn::webgpu_dawn)
+    set(TARGET_LIBS glfw dawn::webgpu_dawn)
 
     add_backend("glfw_wgpu_dawn" "${HEADER_FILES}" "${CPP_FILES}" "${TARGET_LIBS}")
 
