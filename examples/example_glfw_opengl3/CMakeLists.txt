@@ -3,7 +3,7 @@ project(example_glfw_opengl3)
 
 # find_package(imgui REQUIRED)
 
-if (NOT IMGUI_EMSCRIPTEN_FOUND)
+if (NOT HAS_IMGUI_EMSCRIPTEN)
     add_executable(${PROJECT_NAME})
 
     target_sources(${PROJECT_NAME} PRIVATE main.cpp)
@@ -30,10 +30,15 @@ else ()
     else ()
         set(HTTP_PORT 8080)
     endif ()
+    if (IMGUI_HTTP_ADDRESS)
+        set(HTTP_ADDRESS ${IMGUI_HTTP_ADDRESS})
+    else ()
+        set(HTTP_ADDRESS 127.0.0.1)
+    endif ()
     add_custom_target(run_example_glfw_opengl3_emscripten
-        COMMAND python3 -m http.server -d $<TARGET_FILE_DIR:example_glfw_opengl3_emscripten> ${HTTP_PORT}
+        COMMAND python -m http.server -b ${HTTP_ADDRESS} -d $<TARGET_FILE_DIR:example_glfw_opengl3_emscripten> ${HTTP_PORT}
         DEPENDS example_glfw_opengl3_emscripten
-        COMMENT "Run a python3 http.server in example_glfw_opengl3_emscripten location http://127.0.0.1:${HTTP_PORT}/"
+        COMMENT "Run a python http.server in example_glfw_opengl3_emscripten location http://${HTTP_ADDRESS}:${HTTP_PORT}/"
         USES_TERMINAL
     )
 endif ()

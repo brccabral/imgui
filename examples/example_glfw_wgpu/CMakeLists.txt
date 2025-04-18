@@ -48,10 +48,15 @@ if (HAS_IMGUI_EMSCRIPTEN)
     else ()
         set(HTTP_PORT 8080)
     endif ()
+    if (IMGUI_HTTP_ADDRESS)
+        set(HTTP_ADDRESS ${IMGUI_HTTP_ADDRESS})
+    else ()
+        set(HTTP_ADDRESS 127.0.0.1)
+    endif ()
     add_custom_target(run_example_glfw_wgpu_emscripten
-        COMMAND python3 -m http.server -d $<TARGET_FILE_DIR:example_glfw_wgpu_emscripten> ${HTTP_PORT}
+        COMMAND python -m http.server -b ${HTTP_ADDRESS} -d $<TARGET_FILE_DIR:example_glfw_wgpu_emscripten> ${HTTP_PORT}
         DEPENDS example_glfw_wgpu_emscripten
-        COMMENT "Run a python3 http.server in example_glfw_wgpu_emscripten location http://127.0.0.1:${HTTP_PORT}/"
+        COMMENT "Run a python http.server in example_glfw_wgpu_emscripten location http://${HTTP_ADDRESS}:${HTTP_PORT}/"
         USES_TERMINAL
     )
 endif ()
