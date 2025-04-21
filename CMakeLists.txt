@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(ImGui VERSION 1.92.0)
 
-option(BUILD_EXAMPLES "Build examples" ON)
+option(BUILD_EXAMPLES "Build examples" OFF)
 option(WITH_EXTRA_WARNINGS "Pass extra warnings to targets" OFF)
 option(EMSCRIPTEN_USE_FILE_SYSTEM "Include the misc/fonts/ folder as part of the build" OFF)
 
